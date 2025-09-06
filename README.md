@@ -1,29 +1,38 @@
-# Advanced To-Do List
+# To-Do List
 
-Aplicación de gestión de tareas hecha con **React + TypeScript**.  
+Aplicación de gestión de tareas desarrollada con **React** y **TypeScript**.  
 Permite crear, editar, eliminar y organizar tareas con persistencia en `localStorage`.
 
 ---
 
 ## Instalación
 
-1. Clona el repositorio:
+Sigue estos pasos para instalar el proyecto en tu máquina local:
+
+1. Asegúrate de tener instalado **Node.js** (versión 16 o superior) y **npm**.  
+   Verifica la instalación ejecutando en tu terminal:
+   ```bash
+   node --version
+   npm --version
+   ```
+
+2. Clona este repositorio en tu equipo:
    ```bash
    git clone https://github.com/ramon300602-cloud/advanced-todo-app.git
    cd advanced-todo-app
    ```
 
-2. Instala dependencias:
+3. Instala las dependencias necesarias:
    ```bash
    npm install
    ```
 
-3. Inicia el servidor de desarrollo:
+4. Inicia el servidor de desarrollo:
    ```bash
    npm run dev
    ```
 
-4. Abre tu navegador en:
+5. Abre tu navegador en la dirección indicada (generalmente):
    ```
    http://localhost:5173
    ```
@@ -32,25 +41,27 @@ Permite crear, editar, eliminar y organizar tareas con persistencia en `localSto
 
 ## Scripts disponibles
 
-```bash
-npm run dev      # Modo desarrollo
-npm run build    # Generar build de producción
-npm run preview  # Vista previa del build
-```
+Estos son los comandos principales que puedes usar:
+
+- `npm run dev` → Ejecuta la aplicación en modo desarrollo.  
+- `npm run build` → Genera la aplicación lista para producción en la carpeta `dist/`.  
+- `npm run preview` → Sirve localmente la versión de producción generada.  
 
 ---
 
-## Uso
+## Uso de la aplicación
 
-- Crear una nueva tarea desde el formulario principal  
-- Editar o eliminar con los botones correspondientes  
-- Filtrar tareas por estado o buscarlas por texto  
-- Los cambios se guardan automáticamente en `localStorage`
+1. Accede a la aplicación desde tu navegador.  
+2. Para **crear una tarea**, completa el formulario con título y descripción, y guárdala.  
+3. Puedes **editar** o **eliminar** una tarea utilizando los botones correspondientes.  
+4. Usa los **filtros por estado** (pendiente, en progreso, completada) para organizar tus tareas.  
+5. Utiliza la **barra de búsqueda** para encontrar tareas por título o descripción.  
+6. Todas las tareas se guardan automáticamente en `localStorage`, por lo que estarán disponibles al volver a abrir la aplicación.  
 
 ---
 
-## Notas
+## Notas adicionales
 
-- Proyecto construido con **React 18 y TypeScript**  
-- Datos almacenados localmente, sin necesidad de backend  
-- Compatible con cualquier navegador moderno  
+- No se requiere un backend, todos los datos se almacenan en el navegador.  
+- Compatible con navegadores modernos como Chrome, Firefox, Edge y Safari.  
+- Este proyecto está diseñado para fines de aprendizaje y como base para proyectos más avanzados.  
