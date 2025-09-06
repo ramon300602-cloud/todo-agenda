@@ -1,48 +1,35 @@
-/* ================== Variables base ================== */
 :root{
   --bg:#efeee8; --paper:#fffdf8; --paper-border:#e7e4d8; --ink:#1f2937; --muted:#6b7280;
   --rule:#e6e2d5; --spiral:#b8b8b8;
-
   --btn:#f7f6f2; --btn-border:#d8d5c7;
-  --accent:#4f46e5; --accent-2:#06b6d4; /* morado → cian */
-
+  --accent:#4f46e5; --accent-2:#06b6d4;
   --danger:#b91c1c;
   --shadow-1:0 14px 28px rgba(0,0,0,.10);
   --shadow-2:0 6px 14px rgba(0,0,0,.08);
   --radius:14px;
-
-  /* Colores de post-it (BRILLANTES) */
   --postit-yellow:#fff59d;
   --postit-pink:#ffd1dc;
   --postit-mint:#c9f7f5;
   --postit-blue:#cfe8ff;
-
-  /* Estados */
-  --st-pendiente:#f59e0b;    /* ámbar */
-  --st-progreso:#FF0000;     /* roja */
-  --st-completada:#16a34a;   /* verde fuerte */
+  --st-pendiente:#f59e0b;
+  --st-progreso:#FF0000;
+  --st-completada:#16a34a;
 }
 
 [data-theme="dark"]{
-  /* Mantenemos FONDO oscuro y texto claro */
   --bg:#191a1e; --paper:#202127; --paper-border:#2b2c33; --ink:#f3f4f6; --muted:#a1a1aa;
   --rule:#2b2c33; --spiral:#4b4b4b;
-
   --btn:#2a2b31; --btn-border:#3a3b43;
   --accent:#818cf8; --accent-2:#22d3ee;
-
   --danger:#ef4444;
   --shadow-1:0 16px 32px rgba(0,0,0,.45);
   --shadow-2:0 8px 18px rgba(0,0,0,.35);
-
-  /* ⬇️ Post-its IGUALES que en claro */
   --postit-yellow:#fff59d;
   --postit-pink:#ffd1dc;
   --postit-mint:#c9f7f5;
   --postit-blue:#cfe8ff;
 }
 
-/* ================== Reset ================== */
 *{box-sizing:border-box}
 html,body,#root{height:100%}
 body{
@@ -53,24 +40,15 @@ body{
   font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
 }
 
-/* ================== APP BAR (barra superior) ==================
-   - Estilo vidrio (blur)
-   - Subrayado con línea degradé
-   - Centrado y pegajoso (sticky)
-*/
 .hero{
   position: sticky; top: 0; z-index: 100;
   display: grid; place-items: center; gap: 10px;
   padding: 14px 16px;
   text-align: center;
-
-  /* vidrio/transparente */
   background: color-mix(in oklab, var(--paper) 65%, transparent);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 10px rgba(0,0,0,.06);
-
-  /* borde inferior degradé */
   border-bottom: 2px solid transparent;
 }
 .hero::after{
@@ -84,10 +62,8 @@ body{
 }
 .hero .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
 
-/* ================== Contenedor ================== */
 .container{width:min(1280px,94vw); margin:24px auto 40px; display:grid; gap:20px}
 
-/* ================== Libreta (form y búsqueda) ================== */
 .paper{
   background:var(--paper); color:var(--ink);
   border:1px solid var(--paper-border);
@@ -100,7 +76,6 @@ body{
   background-size:100% 28px;
 }
 
-/* ================== Toolbar ================== */
 .toolbar{
   display:grid; gap:12px;
   background:var(--paper);
@@ -111,13 +86,11 @@ body{
   box-shadow:var(--shadow-2);
 }
 
-/* ================== Grid de tareas ================== */
 .grid{
   display:grid; gap:18px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-/* ================== Controles ================== */
 input,textarea,select{
   width:100%;
   border:none; border-bottom:2px solid var(--rule);
@@ -128,7 +101,6 @@ input:focus,textarea:focus,select:focus{ border-color:var(--accent) }
 .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
 .spacer{ flex:1 }
 
-/* ================== Botones ================== */
 .btn{
   border:1px solid var(--btn-border);
   background:var(--btn); color:var(--ink);
@@ -142,7 +114,6 @@ input:focus,textarea:focus,select:focus{ border-color:var(--accent) }
 .btn.primary{ background:color-mix(in oklab, var(--accent) 20%, var(--btn)); border-color:var(--accent) }
 .btn.danger{ border-color:var(--danger) }
 
-/* ================== Chips de filtro ================== */
 .chip{
   display:inline-flex; align-items:center; gap:.5rem;
   padding:.45rem .85rem; border-radius:999px;
@@ -158,14 +129,11 @@ input:focus,textarea:focus,select:focus{ border-color:var(--accent) }
   background:var(--paper-border); border-radius:999px; padding:0 .5rem
 }
 
-/* =========================================================
-   ===   POST-ITS: Solo las tarjetas de tareas (grid)     ===
-   ========================================================= */
 .grid > .paper{
   position:relative;
   border:none; border-radius:12px;
   background: var(--postit-yellow);
-  color:#2b2b2b; /* texto oscuro SIEMPRE para legibilidad */
+  color:#2b2b2b;
   box-shadow:
     0 14px 24px rgba(0,0,0,.16),
     0 4px 8px rgba(0,0,0,.08);
@@ -176,12 +144,10 @@ input:focus,textarea:focus,select:focus{ border-color:var(--accent) }
   background-blend-mode: screen, normal;
   transform: rotate(-0.6deg);
 }
-/* Variantes por posición (mismo esquema en oscuro) */
 .grid > .paper:nth-child(4n+1){ background: var(--postit-yellow); transform: rotate(-0.6deg); }
 .grid > .paper:nth-child(4n+2){ background: var(--postit-pink);   transform: rotate(0.8deg);  }
 .grid > .paper:nth-child(4n+3){ background: var(--postit-mint);   transform: rotate(-1.1deg); }
 .grid > .paper:nth-child(4n+4){ background: var(--postit-blue);   transform: rotate(0.5deg);  }
-/* Chinche */
 .grid > .paper::before{
   content:"";
   position:absolute; top:-10px; left:50%; transform:translateX(-50%);
@@ -205,8 +171,6 @@ input:focus,textarea:focus,select:focus{ border-color:var(--accent) }
   border-color: rgba(0,0,0,.12);
 }
 
-/* ================== Bolitas de estado en <select> ==================
-   Amarilla (pendiente), Verde (en progreso), Verde fuerte (completada) */
 .row select{
   padding-left:28px;
   background-repeat:no-repeat;
@@ -214,37 +178,29 @@ input:focus,textarea:focus,select:focus{ border-color:var(--accent) }
   background-size:12px 12px;
   border-bottom-width:2px;
 }
-/* Pendiente (ámbar) */
 .row select:has(option[value="en progreso"]:checked){
   --bullet: var(--st-pendiente);
   background-image: radial-gradient(circle, var(--bullet) 60%, transparent 61%);
   border-color: var(--st-pendiente);
 }
-/* En progreso (rojo) */
 .row select:has(option[value="pendiente"]:checked){
   --bullet: var(--st-progreso);
   background-image: radial-gradient(circle, var(--bullet) 60%, transparent 61%);
   border-color: var(--st-progreso);
 }
-/* Completada (verde fuerte) */
 .row select:has(option[value="completada"]:checked){
   --bullet: var(--st-completada);
   background-image: radial-gradient(circle, var(--bullet) 60%, transparent 61%);
   border-color: var(--st-completada);
 }
 
-/* ================== Utilidades ================== */
 small.muted{ color:var(--muted) }
 
-/* ================== POST-ITS (ajustes extra) ================== */
-
-/* Texto de botones y select en post-it SIEMPRE negro */
 .grid > .paper .btn,
 .grid > .paper select {
   color: #111 !important;
 }
 
-/* Alinear select + botones en la misma fila */
 .grid > .paper .row {
   display: flex;
   align-items: center;
@@ -253,18 +209,68 @@ small.muted{ color:var(--muted) }
   flex-wrap: wrap;
 }
 .grid > .paper .row select {
-  flex: 1;               /* ocupa espacio disponible */
-  max-width: 150px;      /* para no estirarse demasiado */
+  flex: 1;
+  max-width: 150px;
 }
 .grid > .paper .row .btn {
-  flex: 0 0 auto;        /* que no crezcan ni se bajen */
+  flex: 0 0 auto;
 }
 
-/* ======= Drag & Drop visual ======= */
 .task-card[draggable] { cursor: grab; }
 .task-card.dragging { opacity: .65; cursor: grabbing; transform: rotate(0deg) scale(0.98); }
 .task-card.drag-over {
   outline: 2px dashed var(--accent);
   outline-offset: 4px;
   transform: scale(1.01);
+}
+
+@keyframes rip-out {
+  0% {
+    transform: rotate(var(--rip-rot, -0.6deg)) translateY(0) scale(1);
+    filter: drop-shadow(0 14px 24px rgba(0,0,0,.16)) drop-shadow(0 4px 8px rgba(0,0,0,.08));
+    opacity: 1;
+  }
+  30% {
+    transform: rotate(calc(var(--rip-rot, -0.6deg) - 6deg)) translateY(-6px) translateX(-4px) scale(1.02);
+  }
+  60% {
+    transform: rotate(calc(var(--rip-rot, -0.6deg) + 10deg)) translateY(-24px) translateX(8px) scale(1.02);
+    filter: drop-shadow(0 24px 30px rgba(0,0,0,.20));
+  }
+  100% {
+    transform: rotate(calc(var(--rip-rot, -0.6deg) + 12deg)) translateY(-60px) translateX(18px) scale(0.96);
+    opacity: 0;
+  }
+}
+
+@keyframes tear-edge {
+  0%   { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+  100% { clip-path: polygon(0% 10%, 8% 0%, 18% 8%, 28% 0%, 38% 10%, 48% 0%, 58% 9%, 68% 0%, 78% 8%, 88% 0%, 100% 12%, 100% 100%, 0% 100%); }
+}
+
+.task-card.rip-exit{
+  --rip-rot: -0.6deg;
+  transform-origin: top center;
+  animation: rip-out .55s ease forwards;
+  pointer-events: none;
+  position: relative;
+}
+.task-card.rip-exit::before{
+  opacity: 0;
+  transition: opacity .15s ease;
+}
+.task-card.rip-exit::after{
+  opacity: 0.2;
+}
+
+.task-card.rip-exit .tear-mask{
+  position:absolute; inset:0;
+  background: transparent;
+  pointer-events: none;
+  animation: tear-edge .55s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .task-card.rip-exit{ animation: none; opacity: 0; }
+  .task-card.rip-exit .tear-mask{ animation: none; }
 }

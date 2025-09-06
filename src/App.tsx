@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useMemo, useReducer, useState } from "react";
 
-/* ===== Tipos ===== */
 type TaskStatus = "pendiente" | "en progreso" | "completada";
 type Filter = TaskStatus | "todas";
 type Theme = "dark" | "light";
@@ -15,7 +14,6 @@ interface Task {
     updatedAt: number;
 }
 
-/* ===== Reducer ===== */
 type TaskAction =
     | { type: "ADD"; payload: { title: string; description?: string } }
     | { type: "UPDATE"; payload: { id: string; title: string; description?: string } }
@@ -34,7 +32,6 @@ function move<T>(arr: T[], from: number, to: number): T[] {
 function tasksReducer(state: Task[], action: TaskAction): Task[] {
     switch (action.type) {
         case "HYDRATE":
-            // Mantén el orden guardado tal cual venga
             return [...action.payload];
         case "ADD": {
             const now = Date.now();
@@ -81,7 +78,6 @@ function tasksReducer(state: Task[], action: TaskAction): Task[] {
     }
 }
 
-/* ===== Persistencia ===== */
 const LS_TASKS = "todo.tasks.v1";
 const LS_THEME = "todo.theme.v1";
 
@@ -124,7 +120,6 @@ function useTheme() {
     return { theme, setTheme } as const;
 }
 
-/* ===== Toast sencillo ===== */
 type ToastKind = "success" | "info" | "error";
 function Toast({
     message,
@@ -135,8 +130,7 @@ function Toast({
     kind: ToastKind;
     onClose: () => void;
 }) {
-    const bg =
-        kind === "success" ? "#16a34a" : kind === "error" ? "#dc2626" : "#2563eb";
+    const bg = kind === "success" ? "#16a34a" : kind === "error" ? "#dc2626" : "#2563eb";
     return (
         <div
             role="status"
@@ -192,7 +186,6 @@ function TaskForm({
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    // Inicializa/limpia inputs cuando cambia el modo
     useEffect(() => {
         if (mode.type === "edit") {
             setTitle(mode.task.title);
@@ -208,7 +201,6 @@ function TaskForm({
     function handleSubmit() {
         if (!isValid) return;
         onSubmit({ title, description });
-        // siempre limpiar después de submit (crear o guardar)
         setTitle("");
         setDescription("");
     }
@@ -291,13 +283,14 @@ function FiltersBar({
     );
 }
 
-/* ---- Tarjeta de tarea con soporte DnD ---- */
 function TaskItem({
     task,
     onEdit,
     onAskDelete,
     onStatus,
     dnd,
+    isRipping,
+    onRipEnd,
 }: {
     task: Task;
     onEdit: (t: Task) => void;
@@ -311,15 +304,21 @@ function TaskItem({
         isDragging: boolean;
         isOver: boolean;
     };
+    isRipping: boolean;
+    onRipEnd: (id: string) => void;
 }) {
     return (
         <article
-            className={`paper task-card ${dnd.isDragging ? "dragging" : ""} ${dnd.isOver ? "drag-over" : ""}`}
-            draggable
+            className={`paper task-card ${dnd.isDragging ? "dragging" : ""} ${dnd.isOver ? "drag-over" : ""} ${isRipping ? "rip-exit" : ""
+                }`}
+            draggable={!isRipping}
             onDragStart={(e) => dnd.onDragStart(e, task.id)}
             onDragOver={(e) => dnd.onDragOver(e, task.id)}
             onDrop={(e) => dnd.onDrop(e, task.id)}
             onDragEnd={dnd.onDragEnd}
+            onAnimationEnd={() => {
+                if (isRipping) onRipEnd(task.id);
+            }}
             aria-grabbed={dnd.isDragging}
             aria-dropeffect="move"
         >
@@ -341,10 +340,15 @@ function TaskItem({
                     <option value="completada">Completada</option>
                 </select>
                 <div className="spacer" />
-                <button className="btn" onClick={() => onEdit(task)}>
+                <button className="btn" onClick={() => onEdit(task)} disabled={isRipping} aria-disabled={isRipping}>
                     Editar
                 </button>
-                <button className="btn danger" onClick={() => onAskDelete(task)}>
+                <button
+                    className="btn danger"
+                    onClick={() => onAskDelete(task)}
+                    disabled={isRipping}
+                    aria-disabled={isRipping}
+                >
                     Eliminar
                 </button>
             </div>
@@ -409,7 +413,6 @@ export default function App() {
     const [filter, setFilter] = useState<Filter>("todas");
     const [pendingDelete, setPendingDelete] = useState<Task | null>(null);
 
-    // Toast
     const [toast, setToast] = useState<{ message: string; kind: ToastKind } | null>(null);
     useEffect(() => {
         if (!toast) return;
@@ -417,11 +420,11 @@ export default function App() {
         return () => clearTimeout(id);
     }, [toast]);
 
-    // DnD state
     const [dragId, setDragId] = useState<string | null>(null);
     const [overId, setOverId] = useState<string | null>(null);
 
-    // Contadores para los chips
+    const [ripId, setRipId] = useState<string | null>(null);
+
     const counts = useMemo(() => {
         let p = 0,
             ip = 0,
@@ -457,14 +460,13 @@ export default function App() {
         }
     }
 
-    // ---- Drag & Drop handlers ----
     function onDragStart(e: React.DragEvent, id: string) {
         setDragId(id);
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setData("text/plain", id);
     }
     function onDragOver(e: React.DragEvent, id: string) {
-        e.preventDefault(); // necesario para permitir drop
+        e.preventDefault();
         setOverId(id);
         e.dataTransfer.dropEffect = "move";
     }
@@ -489,9 +491,24 @@ export default function App() {
         setOverId(null);
     }
 
+    function requestDelete(task: Task) {
+        setPendingDelete(task);
+    }
+    function confirmDelete() {
+        if (!pendingDelete) return;
+        setRipId(pendingDelete.id);
+        setPendingDelete(null);
+    }
+    function handleRipEnd(id: string) {
+        
+        dispatch({ type: "DELETE", payload: { id } });
+        setRipId(null);
+        setToast({ message: "Tarea eliminada", kind: "success" });
+    }
+
     return (
         <div>
-            {/* HEADER */}
+            
             <header className="hero">
                 <h1>📘 To-Do List</h1>
                 <div className="actions">
@@ -501,7 +518,7 @@ export default function App() {
                 </div>
             </header>
 
-            {/* CONTENIDO */}
+            
             <main className="container">
                 <TaskForm
                     mode={mode}
@@ -528,7 +545,7 @@ export default function App() {
                                 key={t.id}
                                 task={t}
                                 onEdit={(task) => setMode({ type: "edit", task })}
-                                onAskDelete={(task) => setPendingDelete(task)}
+                                onAskDelete={requestDelete}
                                 onStatus={(id, status) => dispatch({ type: "SET_STATUS", payload: { id, status } })}
                                 dnd={{
                                     onDragStart,
@@ -538,6 +555,8 @@ export default function App() {
                                     isDragging: dragId === t.id,
                                     isOver: overId === t.id,
                                 }}
+                                isRipping={ripId === t.id}
+                                onRipEnd={handleRipEnd}
                             />
                         ))}
                     </div>
@@ -548,10 +567,7 @@ export default function App() {
                 <ConfirmModal
                     taskTitle={pendingDelete.title || "Sin título"}
                     onCancel={() => setPendingDelete(null)}
-                    onConfirm={() => {
-                        dispatch({ type: "DELETE", payload: { id: pendingDelete.id } });
-                        setPendingDelete(null);
-                    }}
+                    onConfirm={confirmDelete}
                 />
             )}
 
