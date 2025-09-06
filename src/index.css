@@ -1,0 +1,270 @@
+/* ================== Variables base ================== */
+:root{
+  --bg:#efeee8; --paper:#fffdf8; --paper-border:#e7e4d8; --ink:#1f2937; --muted:#6b7280;
+  --rule:#e6e2d5; --spiral:#b8b8b8;
+
+  --btn:#f7f6f2; --btn-border:#d8d5c7;
+  --accent:#4f46e5; --accent-2:#06b6d4; /* morado → cian */
+
+  --danger:#b91c1c;
+  --shadow-1:0 14px 28px rgba(0,0,0,.10);
+  --shadow-2:0 6px 14px rgba(0,0,0,.08);
+  --radius:14px;
+
+  /* Colores de post-it (BRILLANTES) */
+  --postit-yellow:#fff59d;
+  --postit-pink:#ffd1dc;
+  --postit-mint:#c9f7f5;
+  --postit-blue:#cfe8ff;
+
+  /* Estados */
+  --st-pendiente:#f59e0b;    /* ámbar */
+  --st-progreso:#FF0000;     /* roja */
+  --st-completada:#16a34a;   /* verde fuerte */
+}
+
+[data-theme="dark"]{
+  /* Mantenemos FONDO oscuro y texto claro */
+  --bg:#191a1e; --paper:#202127; --paper-border:#2b2c33; --ink:#f3f4f6; --muted:#a1a1aa;
+  --rule:#2b2c33; --spiral:#4b4b4b;
+
+  --btn:#2a2b31; --btn-border:#3a3b43;
+  --accent:#818cf8; --accent-2:#22d3ee;
+
+  --danger:#ef4444;
+  --shadow-1:0 16px 32px rgba(0,0,0,.45);
+  --shadow-2:0 8px 18px rgba(0,0,0,.35);
+
+  /* ⬇️ Post-its IGUALES que en claro */
+  --postit-yellow:#fff59d;
+  --postit-pink:#ffd1dc;
+  --postit-mint:#c9f7f5;
+  --postit-blue:#cfe8ff;
+}
+
+/* ================== Reset ================== */
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0; color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 50% -120px, rgba(0,0,0,.06), transparent 60%),
+    var(--bg);
+  font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+/* ================== APP BAR (barra superior) ==================
+   - Estilo vidrio (blur)
+   - Subrayado con línea degradé
+   - Centrado y pegajoso (sticky)
+*/
+.hero{
+  position: sticky; top: 0; z-index: 100;
+  display: grid; place-items: center; gap: 10px;
+  padding: 14px 16px;
+  text-align: center;
+
+  /* vidrio/transparente */
+  background: color-mix(in oklab, var(--paper) 65%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+
+  /* borde inferior degradé */
+  border-bottom: 2px solid transparent;
+}
+.hero::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+.hero h1{
+  margin:0; letter-spacing:.3px;
+  font-size: clamp(26px, 3.2vw, 40px);
+}
+.hero .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
+
+/* ================== Contenedor ================== */
+.container{width:min(1280px,94vw); margin:24px auto 40px; display:grid; gap:20px}
+
+/* ================== Libreta (form y búsqueda) ================== */
+.paper{
+  background:var(--paper); color:var(--ink);
+  border:1px solid var(--paper-border);
+  border-left:8px solid var(--spiral);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-2);
+  padding:18px 18px 16px;
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0px, transparent 26px, var(--rule) 27px);
+  background-size:100% 28px;
+}
+
+/* ================== Toolbar ================== */
+.toolbar{
+  display:grid; gap:12px;
+  background:var(--paper);
+  border:1px solid var(--paper-border);
+  border-left:8px solid var(--spiral);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  box-shadow:var(--shadow-2);
+}
+
+/* ================== Grid de tareas ================== */
+.grid{
+  display:grid; gap:18px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ================== Controles ================== */
+input,textarea,select{
+  width:100%;
+  border:none; border-bottom:2px solid var(--rule);
+  background:transparent; color:var(--ink);
+  font-size:1rem; padding:8px 6px; outline:none;
+}
+input:focus,textarea:focus,select:focus{ border-color:var(--accent) }
+.row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+.spacer{ flex:1 }
+
+/* ================== Botones ================== */
+.btn{
+  border:1px solid var(--btn-border);
+  background:var(--btn); color:var(--ink);
+  border-radius:10px; padding:10px 14px;
+  cursor:pointer;
+  transition:transform .05s ease, filter .15s ease, box-shadow .15s ease;
+}
+.btn:hover{ filter:brightness(1.05); box-shadow:0 2px 6px rgba(0,0,0,.08) }
+.btn:active{ transform:translateY(1px) }
+.btn:disabled,.btn[aria-disabled="true"]{ opacity:.6; cursor:not-allowed }
+.btn.primary{ background:color-mix(in oklab, var(--accent) 20%, var(--btn)); border-color:var(--accent) }
+.btn.danger{ border-color:var(--danger) }
+
+/* ================== Chips de filtro ================== */
+.chip{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.45rem .85rem; border-radius:999px;
+  border:1px solid var(--btn-border); background:var(--btn);
+  text-transform:capitalize;
+  cursor:pointer; user-select:none;
+  transition:filter .15s ease, box-shadow .15s ease, transform .05s ease;
+}
+.chip:hover{ filter:brightness(1.05); box-shadow:0 2px 6px rgba(0,0,0,.06) }
+.chip:active{ transform:translateY(1px) }
+.chip .badge{
+  display:inline-block; min-width:1.4em; text-align:center; font-weight:700;
+  background:var(--paper-border); border-radius:999px; padding:0 .5rem
+}
+
+/* =========================================================
+   ===   POST-ITS: Solo las tarjetas de tareas (grid)     ===
+   ========================================================= */
+.grid > .paper{
+  position:relative;
+  border:none; border-radius:12px;
+  background: var(--postit-yellow);
+  color:#2b2b2b; /* texto oscuro SIEMPRE para legibilidad */
+  box-shadow:
+    0 14px 24px rgba(0,0,0,.16),
+    0 4px 8px rgba(0,0,0,.08);
+  padding:16px 16px 14px;
+  background-image:
+    linear-gradient(to bottom, rgba(255,255,255,.35), rgba(255,255,255,0) 28px),
+    repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, rgba(0,0,0,.06) 29px);
+  background-blend-mode: screen, normal;
+  transform: rotate(-0.6deg);
+}
+/* Variantes por posición (mismo esquema en oscuro) */
+.grid > .paper:nth-child(4n+1){ background: var(--postit-yellow); transform: rotate(-0.6deg); }
+.grid > .paper:nth-child(4n+2){ background: var(--postit-pink);   transform: rotate(0.8deg);  }
+.grid > .paper:nth-child(4n+3){ background: var(--postit-mint);   transform: rotate(-1.1deg); }
+.grid > .paper:nth-child(4n+4){ background: var(--postit-blue);   transform: rotate(0.5deg);  }
+/* Chinche */
+.grid > .paper::before{
+  content:"";
+  position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+  width:16px; height:16px; border-radius:50%;
+  background: radial-gradient(circle at 35% 35%, #fff, #d1d5db 60%, #6b7280 100%);
+  box-shadow: 0 6px 10px rgba(0,0,0,.25);
+  z-index:2;
+}
+.grid > .paper::after{
+  content:"";
+  position:absolute; inset:auto 8px -6px 8px; height:14px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.18), transparent 60%);
+  filter: blur(6px);
+  z-index:0;
+}
+.grid > .paper h4{ margin:0 0 6px 0; font-weight:700; }
+.grid > .paper p{ margin:0 0 6px 0; }
+.grid > .paper small.muted{ color: rgba(0,0,0,.55); }
+.grid > .paper .btn{
+  background: rgba(255,255,255,.55);
+  border-color: rgba(0,0,0,.12);
+}
+
+/* ================== Bolitas de estado en <select> ==================
+   Amarilla (pendiente), Verde (en progreso), Verde fuerte (completada) */
+.row select{
+  padding-left:28px;
+  background-repeat:no-repeat;
+  background-position:8px 50%;
+  background-size:12px 12px;
+  border-bottom-width:2px;
+}
+/* Pendiente (ámbar) */
+.row select:has(option[value="en progreso"]:checked){
+  --bullet: var(--st-pendiente);
+  background-image: radial-gradient(circle, var(--bullet) 60%, transparent 61%);
+  border-color: var(--st-pendiente);
+}
+/* En progreso (rojo) */
+.row select:has(option[value="pendiente"]:checked){
+  --bullet: var(--st-progreso);
+  background-image: radial-gradient(circle, var(--bullet) 60%, transparent 61%);
+  border-color: var(--st-progreso);
+}
+/* Completada (verde fuerte) */
+.row select:has(option[value="completada"]:checked){
+  --bullet: var(--st-completada);
+  background-image: radial-gradient(circle, var(--bullet) 60%, transparent 61%);
+  border-color: var(--st-completada);
+}
+
+/* ================== Utilidades ================== */
+small.muted{ color:var(--muted) }
+
+/* ================== POST-ITS (ajustes extra) ================== */
+
+/* Texto de botones y select en post-it SIEMPRE negro */
+.grid > .paper .btn,
+.grid > .paper select {
+  color: #111 !important;
+}
+
+/* Alinear select + botones en la misma fila */
+.grid > .paper .row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.grid > .paper .row select {
+  flex: 1;               /* ocupa espacio disponible */
+  max-width: 150px;      /* para no estirarse demasiado */
+}
+.grid > .paper .row .btn {
+  flex: 0 0 auto;        /* que no crezcan ni se bajen */
+}
+
+/* ======= Drag & Drop visual ======= */
+.task-card[draggable] { cursor: grab; }
+.task-card.dragging { opacity: .65; cursor: grabbing; transform: rotate(0deg) scale(0.98); }
+.task-card.drag-over {
+  outline: 2px dashed var(--accent);
+  outline-offset: 4px;
+  transform: scale(1.01);
+}
